@@ -3,11 +3,11 @@ from models import Flight
 
 class Airport:
     def __init__(self, code):
-        self.outgoingFlights = []  # array of type Flight
+        self.outgoing_flights = []  # array of type Flight
         self.code = code
 
     def add_outgoing_flight(self, flight):
-        self.outgoingFlights.append(flight)
+        self.outgoing_flights.append(flight)
 
     def create_outgoing_flight(self, destination, deptTime, duration, price):
         flight = Flight(destination, deptTime, duration, price)
@@ -17,4 +17,5 @@ class Airport:
         return self.code
 
     def __str__(self):
-        return str(self.code)
+        return "Airport" + str(self.code) \
+                + " - NumFlights: " + str(len(self.outgoing_flights))

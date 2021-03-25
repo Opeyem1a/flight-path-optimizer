@@ -1,4 +1,4 @@
-from models.flight import Flight
+from models import Flight
 
 
 class Airport:

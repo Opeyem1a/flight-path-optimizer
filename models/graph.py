@@ -1,4 +1,4 @@
-from models.airport import Airport
+from models import Airport
 
 
 class Graph:

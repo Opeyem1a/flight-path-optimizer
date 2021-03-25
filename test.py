@@ -4,3 +4,4 @@ from models import Graph
 graph = Graph()
 ld = LoadData(graph)
 ld.load()
+print(graph)

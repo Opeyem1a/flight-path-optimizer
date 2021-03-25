@@ -1,4 +1,4 @@
-from models import Airport
+from models import Airport, Flight
 
 
 class Graph:
@@ -26,7 +26,15 @@ class Graph:
     def add_flight(self, src_code, flight):
         self.get_or_create_airport(src_code).add_outgoing_flight(flight)
 
+    def create_flight(self, src_code, dest_code, deptTime, duration, price):
+        dest_airport = self.get_or_create_airport(dest_code)
+        flight = Flight(dest_airport, deptTime, duration, price)
+        self.add_flight(src_code, flight)
+
     def __str__(self):
         out = "Airport Graph"
         # TODO: add more details
+        for key, airport in self.airport_dict.items():
+            out += "\n"+key+"\t"+airport.__str__()
+
         return out

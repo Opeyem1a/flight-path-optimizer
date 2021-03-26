@@ -26,9 +26,9 @@ class Graph:
     def add_flight(self, src_code, flight):
         self.get_or_create_airport(src_code).add_outgoing_flight(flight)
 
-    def create_flight(self, src_code, dest_code, deptTime, duration, price):
+    def create_flight(self, src_code, dest_code, dept_time, duration, price):
         dest_airport = self.get_or_create_airport(dest_code)
-        flight = Flight(dest_airport, deptTime, duration, price)
+        flight = Flight(dest_airport, dept_time, duration, price)
         self.add_flight(src_code, flight)
 
     def __str__(self):

@@ -9,12 +9,15 @@ class Airport:
     def add_outgoing_flight(self, flight):
         self.outgoing_flights.append(flight)
 
-    def create_outgoing_flight(self, destination, deptTime, duration, price):
-        flight = Flight(destination, deptTime, duration, price)
+    def create_outgoing_flight(self, destination, dept_time, duration, price):
+        flight = Flight(destination, dept_time, duration, price)
         self.add_outgoing_flight(flight)
 
     def get_code(self):
         return self.code
+
+    def get_outgoing_flights(self):
+        return self.outgoing_flights
 
     def __str__(self):
         return "Airport" + str(self.code) \

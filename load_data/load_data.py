@@ -16,20 +16,32 @@ class LoadData:
                     'Dest', 'DestAirportID', 'DepTime', 'ArrTime', 'CRSElapsedTime', 'ActualElapsedTime']
         df = pd.read_csv('./data/flight_data.csv', usecols=col_list)
 
+        col_list_price = ['ORIGIN', 'DEST', 'MARKET_FARE']
+        df_price = pd.read_csv('./data/flight_price.csv', usecols=col_list_price) \
+            .rename(columns={'ORIGIN': 'Origin', 'DEST': 'Dest', 'MARKET_FARE': 'MarketFare'}) \
+            .groupby(['Origin',
+                      'Dest']) \
+            .agg({'MarketFare': ['mean']})
+
+        print(df_price)
+
         agg_data = df.groupby(['Marketing_Airline_Network',
                                'Flight_Number_Operating_Airline',
                                'Origin',
                                'Dest',
-                               'DayOfWeek']) \
+                               'DayOfWeek'], as_index=False) \
             .agg({'DepTime': ['mean'],
                   'ActualElapsedTime': ['mean'], }) \
-            .dropna()
+            .dropna() \
+            .set_index(['Origin', 'Dest'])
 
-        for index, row in agg_data.iterrows():
-            src_code = row.name[2]
-            dest_code = row.name[3]
+        new_data = agg_data.join(df_price, how='inner')
+
+        for index, row in new_data.iterrows():
+            src_code = row.name[0]
+            dest_code = row.name[1]
             dept_time = row['DepTime']
             duration = row['ActualElapsedTime']
             # TODO: obviously the price should not be random going forward
-            price = random.randint(100, 1000)
+            price = row["MarketFare"]
             self.graph.create_flight(src_code, dest_code, dept_time, duration, price)

@@ -17,14 +17,8 @@ class Flight:
     def get_price(self):
         return self.price
 
-    def set_destination(self, destination):
-        self.destination = destination
-
-    def set_dept_time(self, dept_time):
-        self.dept_time = dept_time
-
-    def set_duration(self, duration):
-        self.duration = duration
-
-    def set_price(self, price):
-        self.price = price
+    def __str__(self):
+        return '' + self.destination.get_code() \
+               + '\tDept Time: ' + self.dept_time \
+               + '\tDur: ' + self.duration \
+               + '\tPrice: $' + self.price

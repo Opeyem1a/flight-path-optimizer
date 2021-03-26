@@ -22,3 +22,9 @@ class Airport:
     def __str__(self):
         return "Airport" + str(self.code) \
                 + " - NumFlights: " + str(len(self.outgoing_flights))
+
+    def print_flights(self):
+        print('=== ', str(self.code), ' ===')
+        print('> NumFlights:', str(len(self.outgoing_flights)))
+        for flight in self.outgoing_flights:
+            print('\t', flight.__str__())

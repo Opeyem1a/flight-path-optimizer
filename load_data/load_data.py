@@ -23,8 +23,6 @@ class LoadData:
                       'Dest']) \
             .agg({'MarketFare': ['mean']})
 
-        print(df_price)
-
         agg_data = df.groupby(['Marketing_Airline_Network',
                                'Flight_Number_Operating_Airline',
                                'Origin',
@@ -42,6 +40,5 @@ class LoadData:
             dest_code = row.name[1]
             dept_time = row['DepTime']
             duration = row['ActualElapsedTime']
-            # TODO: obviously the price should not be random going forward
             price = row["MarketFare"]
             self.graph.create_flight(src_code, dest_code, dept_time, duration, price)

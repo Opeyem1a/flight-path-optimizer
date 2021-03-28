@@ -16,3 +16,9 @@ class State:
 
     def get_flights_taken(self):
         return self.flights_taken
+
+    def __gt__(self, other):
+        return self.node_cost > other.node_cost
+
+    def __eq__(self, other):
+        return self.node_cost == other.node_cost

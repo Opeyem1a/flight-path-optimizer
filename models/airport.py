@@ -14,7 +14,7 @@ class Airport:
         self.add_outgoing_flight(flight)
 
     def get_code(self):
-        return self.code
+        return str(self.code)
 
     def get_outgoing_flights(self):
         return self.outgoing_flights

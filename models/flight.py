@@ -18,7 +18,8 @@ class Flight:
         return self.price
 
     def __str__(self):
-        return '' + self.destination.get_code() \
-               + '\tDept Time: ' + self.dept_time \
-               + '\tDur: ' + self.duration \
-               + '\tPrice: $' + self.price
+        from datetime import datetime
+        return 'Flight to: ' + self.destination.get_code() \
+               + '\tDept Time: ' + datetime.fromtimestamp(self.dept_time).strftime('%Y-%m-%d %H:%M') \
+               + '\tDur: ' + str(self.duration) \
+               + '\tPrice: $' + str(self.price)

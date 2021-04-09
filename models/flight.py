@@ -1,5 +1,5 @@
 class Flight:
-    def __init__(self, destination, dept_time, duration, price):
+    def __init__(self, destination, dept_time: int, duration: int, price: float):
         self.destination = destination
         self.dept_time = dept_time
         self.duration = duration

@@ -1,51 +1,41 @@
-import time
-
-import dill as dill
-
 from load_data import LoadData
-from models import Graph
+from models.graph import Graph
 
 prelim = input("\"load\" or \"open\"\n")
 graph = Graph()
 max_outgoing = int(input("Enter max # of outgoing flights per airport: "))
 
 if prelim == 'load':
-    ld = LoadData(graph, True, max_outgoing)
-    ld.load()
+    graph.init_with_data(True, max_outgoing, max_airports=4)
 else:
-    ld = LoadData(graph, False, max_outgoing)
-    ld.load()
-
-print(graph)
-print('Number of Airports: ', len(graph.airport_dict))
-num_edges = 0
-for a in graph.airports:
-    num_edges += len(a.outgoing_flights)
-print('Number of Flights (Edges): ', num_edges)
+    graph.init_with_data(False, max_outgoing, max_airports=4)
 
 while True:
     try:
-        src_code = input("First Airport Code: ")
+        src_code = input("Src Airport Code: ")
 
         src_airport = graph.get_airport(src_code.upper())
         src_airport.print_flights()
 
-        dest_code = input("Second Airport Code: ")
+        dest_code = input("Dest Airport Code: ")
 
         dest_airport = graph.get_airport(dest_code.upper())
         dest_airport.print_flights()
 
-        start_time = int(input('Start Time: '))
+        start_time = int(input('Start Time (as a seconds timestamp): '))
 
-        if src_airport is None or dest_airport is None:
-            print('Something went wrong. Try again.\n')
-            continue
+        from algorithm import FlightOptimizer, FlightNoptimizer
 
-        from algorithm import FlightOptimizer
-
+        print("\nBETTER")
         fo = FlightOptimizer(src_airport, dest_airport, start_time)
-        fo.find_best_path()
+        fo.find_best_path(graph)
+
+        print("\nWORSE")
+        fno = FlightNoptimizer(src_airport, dest_airport, start_time)
+        fno.find_best_path(graph)
     except KeyError:
         continue
     except ValueError:
+        continue
+    except AttributeError:
         continue

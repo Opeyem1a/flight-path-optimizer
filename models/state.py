@@ -1,5 +1,9 @@
+from models.airport import Airport
+from models.flight import Flight
+
+
 class State:
-    def __init__(self, airport, node_cost, curr_time, flights_taken):
+    def __init__(self, airport: Airport, node_cost: float, curr_time: int, flights_taken: [Flight]):
         self.airport = airport  # the current airport at this state
         self.node_cost = node_cost  # total node cost at this state
         self.curr_time = curr_time  # current time for this state, encoded as a decimal, (0 - 23.99)

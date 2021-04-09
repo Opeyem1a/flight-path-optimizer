@@ -1,14 +1,20 @@
 from queue import PriorityQueue
 
-from algorithm import State
 
+from models.airport import Airport
+from models.flight import Flight
+from models.graph import Graph
+from models.state import State
 
-# from models import PriorityQueue
+# Defining constants (NOTE: Must always have the same values as the fast algorithm)
+W_DUR = 0.05
+W_PRI = 2
+W_WAIT = 0.005
 
 
 class FlightOptimizer:
 
-    def __init__(self, src_airport, dest_airport, start_time):
+    def __init__(self, src_airport: Airport, dest_airport: Airport, start_time: int):
         self.src_airport = src_airport
         self.dest_airport = dest_airport
         self.queue = PriorityQueue()
@@ -16,50 +22,49 @@ class FlightOptimizer:
         self.queue.put(initial_state)
         self.found_solution = False
 
-    def calculate_wait_time(self, curr_time, next_flight_dept_time):
-        return next_flight_dept_time - curr_time
-
-    def calculate_new_cost(self, curr_state, flight, wait_time):
-        added_cost = 0.5 * flight.get_duration() + 1 * flight.get_price() + 0.2 * wait_time
+    def calculate_new_cost(self, curr_state: State, flight: Flight, wait_time: int):
+        added_cost = W_DUR * flight.get_duration() + W_PRI * flight.get_price() + W_WAIT * wait_time
         return curr_state.get_node_cost() + added_cost
 
-    def is_goal_state(self, state):
+    def is_goal_state(self, state: State):
         return state.get_airport().get_code() == self.dest_airport.get_code()
 
-    def print_path(self, state):
-        self.found_solution = True
+    def print_path(self, state: State):
         flights = state.get_flights_taken()
-        print('------- Solution -------')
+        print('------- Solution | Fast -------')
         print('Start at ' + self.src_airport.get_code())
         for flight in flights:
             print(flight)
         print('Arrive at ' + self.dest_airport.get_code())
 
-    def find_best_path(self):
+    def find_best_path(self, graph: Graph):
+        for airport in graph.airports:
+            airport.min_cost = float('inf')
+
         while not self.queue.qsize() == 0:  # while the queue is not empty
             curr_state = self.queue.get()
-            print(self.queue.qsize())
+
+            if curr_state.get_airport().min_cost < curr_state.get_node_cost():
+                continue
+            curr_state.get_airport().min_cost = min(curr_state.get_node_cost(), curr_state.get_airport().min_cost)
 
             if self.is_goal_state(curr_state):
                 self.print_path(curr_state)
-                break
+                return
 
             for flight in curr_state.get_airport().get_outgoing_flights():
-                # continue if the flight has already taken off
+                # skip processing this flight if the it has already taken off
                 if flight.get_dept_time() < curr_state.get_curr_time():
                     continue
 
-                # print(curr_state.get_airport().get_code(), "\t|\t", flight.destination.get_code(), "\t", curr_state.get_node_cost())
                 wait_time = flight.get_dept_time() - curr_state.get_curr_time()
                 new_node_cost = self.calculate_new_cost(curr_state, flight, wait_time)
 
-                new_node_time = flight.get_dept_time() + wait_time + flight.get_duration()
+                new_node_time = flight.get_dept_time() + flight.get_duration()
 
-                new_flights_taken = list(curr_state.get_flights_taken())
-                new_flights_taken.append(flight)
+                new_flights_taken = [*curr_state.get_flights_taken(), flight]
 
                 next_state = State(flight.destination, new_node_cost, new_node_time, new_flights_taken)
                 self.queue.put(next_state)
 
-        if not self.found_solution:
-            print('Solution could not be found')
+        print('Solution could not be found | Fast')

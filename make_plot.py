@@ -8,8 +8,6 @@ from plots.plot_data import *
 from algorithm import FlightOptimizer, FlightNoptimizer
 from models.graph import Graph
 
-dest_directory = 'plots/data/'
-
 
 def setup(max_outgoing, max_airports):
     graph = Graph()
@@ -29,7 +27,7 @@ def setup(max_outgoing, max_airports):
 def generate_data(best_alg: bool, vary: string):
     time_data = []
     run_type = 'Best' if best_alg else 'Worst'
-    dest_file_name = f'{dest_directory}vary_{vary}_{run_type.lower()}_data'
+    dest_file_name = f'{dest_directory}vary_{vary}_{run_type.lower()}_data.pkl'
     is_v = False
 
     if vary == 'v':
@@ -56,7 +54,7 @@ def generate_data(best_alg: bool, vary: string):
         optimizer.find_best_path(graph)
         end = time.time()
         # save times
-        time_data.append(start - end)
+        time_data.append(end - start)
 
     # save the time data
     with open(dest_file_name, 'wb') as f:
